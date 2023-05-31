@@ -1,26 +1,94 @@
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-index 73ab02a..699305d 100644
+index 73ab02a..56d1703 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-@@ -458,9 +458,17 @@ async function createChangeset(changedPackages, allPackages) {
+@@ -335,6 +335,62 @@ function formatPkgNameAndVersion(pkgName, version) {
+ async function createChangeset(changedPackages, allPackages) {
+   const releases = [];
+ 
++// PATCH: verify that CLI is run in a supported repository
++  const SUPPORTED_PRIMER_PACKAGES = [
++    "@primer/react",
++    "@primer/view-components",
++  ];
++  const pkgPath = require(path__default["default"].join(
++    process.cwd(),
++    "package.json"
++  ));
++  let pkg;
++  try {
++    pkg = require(path__default["default"].join(process.cwd(), "package.json"));
++  } catch {
++    throw new Error(
++      `This CLI must be run in a Primer package repository. No package.json found at ${pkgPath}`
++    );
++  }
++
++  const primerPackages = [];
++
++  if (pkg.name === "@primer/react") {
++    const componentsPath = path__default["default"].join(
++      process.cwd(),
++      "generated/components.json"
++    );
++    logger.log(
++      `Loading components information for ${pkg.name} from ${componentsPath}`
++    );
++    const { components } = require(componentsPath);
++    primerPackages.push(
++      ...Object.values(components).map((component) => component.name)
++    );
++  } else if (pkg.name === "@primer/view-components") {
++    logger.log(
++      `Loading components information for ${pkg.name} from https://primer.github.io/view_components/components.json`
++    );
++
++    if (!globalThis?.fetch) {
++      throw new Error(`This CLI must be run in a Node.js 18+`);
++    }
++
++    const response = await fetch(
++      "https://primer.github.io/view_components/components.json"
++    );
++    const components = await response.json();
++    primerPackages.push(...components.map((component) => component.id));
++  } else {
++    if (!SUPPORTED_PRIMER_PACKAGES.includes(pkg.name)) {
++      throw new Error(
++        `This CLI is only supported in the following packages: ${SUPPORTED_PRIMER_PACKAGES.join(
++          ", "
++        )}`
++      );
++    }
++  }
++
+   if (allPackages.length > 1) {
+     const packagesToRelease = await getPackagesToRelease(changedPackages, allPackages);
+     let pkgJsonsByName = getPkgJsonsByName(allPackages);
+@@ -458,10 +514,21 @@ async function createChangeset(changedPackages, allPackages) {
      }
    }
  
-+  logger.log(chalk__default['default'].gray("  (select packages with <space>, type to filter, confirm with <enter>)"));
-+  const { components } = require("@primer/component-metadata")
-+  const primerPackages = await askCheckboxPlus(
-+    `Which Primer packages have been affected by this change?`, 
-+    Object.keys(components),
-+  )
++  logger.log(
++    chalk__default["default"].gray(
++      "  (select packages with <space>, type to filter, confirm with <enter>)"
++    )
++  );
++  const selectedPrimerPackages = await askCheckboxPlus(
++    `Which Primer packages have been affected by this change?`,
++    primerPackages
++  );
 +
    return {
      confirmed: false,
      summary,
-+    primerPackages,
-     releases
+-    releases
++    selectedPrimerPackages,
++    releases,
    };
  }
-@@ -531,7 +539,8 @@ async function add(cwd, {
+ 
+@@ -531,7 +598,8 @@ async function add(cwd, {
      });
      const changedPackagesName = changedPackages.filter(pkg => isListablePackage(config, pkg.packageJson)).map(pkg => pkg.packageJson.name);
      newChangeset = await createChangeset(changedPackagesName, listablePackages);
@@ -30,7 +98,7 @@ index 73ab02a..699305d 100644
  
      if (!newChangeset.confirmed) {
        newChangeset = _objectSpread2(_objectSpread2({}, newChangeset), {}, {
-@@ -542,6 +551,15 @@ async function add(cwd, {
+@@ -542,6 +610,15 @@ async function add(cwd, {
  
    if (newChangeset.confirmed) {
      const changesetID = await writeChangeset__default['default'](newChangeset, cwd);
@@ -39,14 +107,14 @@ index 73ab02a..699305d 100644
 +    const changesetPath = path__default['default'].resolve(changesetBase, `${changesetID}.md`);
 +    let content = await fs__default['default'].readFile(changesetPath, 'utf8')
 +
-+    content += `\nChanged components: ${newChangeset.primerPackages.join(", ")}\n`
++    content += `\nChanged components: ${newChangeset.selectedPrimerPackages.join(", ")}\n`
 +
 +    await fs__default['default'].writeFile(changesetPath, content)
 +
      const [{
        getAddMessage
      }, commitOpts] = getCommitFunctions(config.commit, cwd);
-@@ -565,7 +583,7 @@ async function add(cwd, {
+@@ -565,7 +642,7 @@ async function add(cwd, {
        logger.log(chalk__default['default'].green("If you want to modify or expand on the changeset summary, you can find it here"));
      }
  
@@ -55,7 +123,7 @@ index 73ab02a..699305d 100644
      logger.info(chalk__default['default'].blue(changesetPath));
  
      if (open) {
-@@ -1565,7 +1583,9 @@ const {
+@@ -1565,7 +1642,9 @@ const {
  
    }
  });
