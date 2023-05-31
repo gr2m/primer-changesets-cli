@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: lts/*
           cache: npm
+      # we need to install dependencies in order to run the patch
+      - run: npm ci
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
