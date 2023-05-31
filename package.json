@@ -14,10 +14,8 @@
   "license": "ISC",
   "repository": "github:gr2m/primer-changesets-cli",
   "dependencies": {
+    "@changesets/cli": "2.26.1",
     "patch-package": "^7.0.0"
-  },
-  "devDependencies": {
-    "@changesets/cli": "2.26.1"
   },
   "release": {
     "branches": [
