@@ -8,6 +8,18 @@ This CLI is a think wrapper around [the `changesets` CLI](https://github.com/cha
 
 Depending on in which repository the CLI is run, it will either suggest a module from [primer/react](https://github.com/primer/react) or [primer/view_components](https://github.com/primer/view_components).
 
+As a result the generated changeset will include a footer. An example changeset file might look like this:
+
+```md
+---
+"@primer/react": patch
+---
+
+SSR-compatibibility fixes.
+
+Changed components: MarkdownEditor, ActionList
+```
+
 ## Setup for `primer/*` repository
 
 Install `primer-changesets-cli` as a dev dependency in your project. Remove `@changesets/cli` if it is already installed.
