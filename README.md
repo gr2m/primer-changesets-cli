@@ -25,6 +25,21 @@ The usage remains the same as with `@changesets/cli`, the binary name is the sam
 npx changeset
 ```
 
+## Updating the patch
+
+1. Make your changes directly in `node_modules/@changesets/cli/dist/cli.cjs.dev.js`
+2. Run `npm run update-patch`
+
+In order to test the change locally, replace the version of `primer-changesets-cli` in the `primer/*` folder's `package.json` file
+with a local path
+
+```diff
+-    "primer-changesets-cli": "2.0.0",
++    "primer-changesets-cli": "file:../../gr2m/primer-changesets-cli",
+```
+
+Then run `npx changeset` as usual.
+
 ## How it works
 
 Unfortunately the the `@changeset/cli` package is not decomposable, we cannot easily import selected modules from it, inject our additional question, and then compose it together again before running it.
