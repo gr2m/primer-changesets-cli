@@ -8,10 +8,21 @@ This CLI is a think wrapper around [the `changesets` CLI](https://github.com/cha
 
 Depending on in which repository the CLI is run, it will either suggest a module from [primer/react](https://github.com/primer/react) or [primer/view_components](https://github.com/primer/view_components).
 
-Run with
+## Setup for `primer/*` repository
+
+Install `primer-changesets-cli` as a dev dependency in your project. Remove `@changesets/cli` if it is already installed.
 
 ```
-npx primer-changesets-cli@latest
+npm uninstall @changesets/cli
+npm install primer-changesets-cli --save-dev
+```
+
+## Usage
+
+The usage remains the same as with `@changesets/cli`, the binary name is the same:
+
+```
+npx changeset
 ```
 
 ## How it works
