@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The Primer flavored changesets CLI",
   "bin": {
-    "changeset": "bin.js"
+    "primer-changesets": "bin.js"
   },
   "scripts": {
     "postinstall": "patch-package"
