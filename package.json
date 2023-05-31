@@ -6,7 +6,8 @@
     "primer-changesets": "bin.js"
   },
   "scripts": {
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "prepublishOnly": "cp node_modules/@changesets/cli/dist/cli.cjs.dev.js bin.js"
   },
   "author": "Gregor Martynus (https://github.com/gr2m)",
   "license": "ISC",
