@@ -15,5 +15,16 @@
     "@changesets/cli": "2.26.1",
     "@primer/component-metadata": "^0.5.1",
     "patch-package": "^7.0.0"
+  },
+  "release": {
+    "branches": [
+      "+([0-9]).x",
+      "main",
+      "next",
+      {
+        "name": "beta",
+        "prerelease": true
+      }
+    ]
   }
 }
