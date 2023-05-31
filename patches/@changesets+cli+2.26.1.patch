@@ -1,7 +1,25 @@
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-index 73ab02a..56d1703 100644
+index 73ab02a..b3a63ab 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
+@@ -101,7 +101,7 @@ function _objectSpread2(target) {
+   return target;
+ }
+ 
+-const pkgPath = path__default['default'].dirname(require.resolve("@changesets/cli/package.json")); // Modify base branch to "main" without changing defaultWrittenConfig since it also serves as a fallback
++// const pkgPath = path__default['default'].dirname(require.resolve("@changesets/cli/package.json")); // Modify base branch to "main" without changing defaultWrittenConfig since it also serves as a fallback
+ // for config files that don't specify a base branch. Changing that to main would be a breaking change.
+ 
+ const defaultConfig = `${JSON.stringify(_objectSpread2(_objectSpread2({}, config.defaultWrittenConfig), {}, {
+@@ -127,7 +127,7 @@ async function init(cwd) {
+       logger.warn("It looks like you already have changesets initialized. You should be able to run changeset commands no problems.");
+     }
+   } else {
+-    await fs__default['default'].copy(path__default['default'].resolve(pkgPath, "./default-files"), changesetBase);
++    // await fs__default['default'].copy(path__default['default'].resolve(pkgPath, "./default-files"), changesetBase);
+     await fs__default['default'].writeFile(path__default['default'].resolve(changesetBase, "config.json"), defaultConfig);
+     logger.log(chalk__default['default']`Thanks for choosing {green changesets} to help manage your versioning and publishing\n`);
+     logger.log("You should be set up to start using changesets now!\n");
 @@ -335,6 +335,62 @@ function formatPkgNameAndVersion(pkgName, version) {
  async function createChangeset(changedPackages, allPackages) {
    const releases = [];
@@ -133,6 +151,17 @@ index 73ab02a..56d1703 100644
  run$2(input, flags, cwd).catch(err => {
    if (err instanceof errors.InternalError) {
      logger.error("The following error is an internal unexpected error, these should never happen.");
+@@ -1578,8 +1657,8 @@ ${util.format("", err).replace(process.cwd(), "<cwd>")}
+ 
+ ## Versions
+ 
+-- @changesets/cli@${// eslint-disable-next-line import/no-extraneous-dependencies
+-    require("@changesets/cli/package.json").version}
++- primer-changesets-cli@${// eslint-disable-next-line import/no-extraneous-dependencies
++    require(".").version}
+ - node@${process.version}
+ 
+ ## Extra details
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.js b/node_modules/@changesets/cli/dist/cli.cjs.js
 index 47258e0..a37beff 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.js
