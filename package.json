@@ -7,7 +7,7 @@
   },
   "scripts": {
     "postinstall": "patch-package",
-    "prepublishOnly": "echo \"#!/usr/bin/env node\n\n$(cat node_modules/@changesets/cli/dist/cli.cjs.dev.js)\" > bin.js"
+    "prepublishOnly": "cp node_modules/@changesets/cli/dist/cli.cjs.dev.js bin.js && sed -i '1s/^/#!\\/usr\\/bin\\/env node\\n\\n/' bin.js"
   },
   "author": "Gregor Martynus (https://github.com/gr2m)",
   "license": "ISC",
