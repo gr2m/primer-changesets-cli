@@ -11,7 +11,7 @@ Depending on in which repository the CLI is run, it will either suggest a module
 Run with
 
 ```
-npx primer-changesets-cli
+npx primer-changesets-cli@latest
 ```
 
 ## How it works
