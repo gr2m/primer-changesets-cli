@@ -40,6 +40,8 @@ with a local path
 
 Then run `npx changeset` as usual.
 
+Important: if you updated `@changesets/cli` to a new version, remove the old patch file and update the dependencies in `package.json`. Replace `"dependencies"` with all of `@changesets/cli`'s dependencies plus `"patch-package": "^7.0.0"`.
+
 ## How it works
 
 Unfortunately the the `@changeset/cli` package is not decomposable, we cannot easily import selected modules from it, inject our additional question, and then compose it together again before running it.
