@@ -6,7 +6,7 @@
     "changeset": "bin.js"
   },
   "scripts": {
-    "postinstall": "patch-package",
+    "postinstall": "npx patch-package",
     "prepublishOnly": "cp node_modules/@changesets/cli/dist/cli.cjs.dev.js bin.js && sed -i '1s/^/#!\\/usr\\/bin\\/env node\\n\\n/' bin.js",
     "update-patch": "npx patch-package @changesets/cli"
   },
