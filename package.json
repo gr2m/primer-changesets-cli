@@ -1,6 +1,6 @@
 {
   "name": "primer-changesets-cli",
-  "version": "1.0.0",
+  "version": "0.0.0-local-development",
   "description": "The Primer flavored changesets CLI",
   "bin": {
     "primer-changesets": "bin.js"
