@@ -1,0 +1,87 @@
+diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
+index 73ab02a..699305d 100644
+--- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
++++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
+@@ -458,9 +458,17 @@ async function createChangeset(changedPackages, allPackages) {
+     }
+   }
+ 
++  logger.log(chalk__default['default'].gray("  (select packages with <space>, type to filter, confirm with <enter>)"));
++  const { components } = require("@primer/component-metadata")
++  const primerPackages = await askCheckboxPlus(
++    `Which Primer packages have been affected by this change?`, 
++    Object.keys(components),
++  )
++
+   return {
+     confirmed: false,
+     summary,
++    primerPackages,
+     releases
+   };
+ }
+@@ -531,7 +539,8 @@ async function add(cwd, {
+     });
+     const changedPackagesName = changedPackages.filter(pkg => isListablePackage(config, pkg.packageJson)).map(pkg => pkg.packageJson.name);
+     newChangeset = await createChangeset(changedPackagesName, listablePackages);
+-    printConfirmationMessage(newChangeset, listablePackages.length > 1);
++    // printConfirmationMessage(newChangeset, listablePackages.length > 1);
++    newChangeset.confirmed = true
+ 
+     if (!newChangeset.confirmed) {
+       newChangeset = _objectSpread2(_objectSpread2({}, newChangeset), {}, {
+@@ -542,6 +551,15 @@ async function add(cwd, {
+ 
+   if (newChangeset.confirmed) {
+     const changesetID = await writeChangeset__default['default'](newChangeset, cwd);
++
++    // PATCH - add changed modules to changeset summary
++    const changesetPath = path__default['default'].resolve(changesetBase, `${changesetID}.md`);
++    let content = await fs__default['default'].readFile(changesetPath, 'utf8')
++
++    content += `\nChanged components: ${newChangeset.primerPackages.join(", ")}\n`
++
++    await fs__default['default'].writeFile(changesetPath, content)
++
+     const [{
+       getAddMessage
+     }, commitOpts] = getCommitFunctions(config.commit, cwd);
+@@ -565,7 +583,7 @@ async function add(cwd, {
+       logger.log(chalk__default['default'].green("If you want to modify or expand on the changeset summary, you can find it here"));
+     }
+ 
+-    const changesetPath = path__default['default'].resolve(changesetBase, `${changesetID}.md`);
++    
+     logger.info(chalk__default['default'].blue(changesetPath));
+ 
+     if (open) {
+@@ -1565,7 +1583,9 @@ const {
+ 
+   }
+ });
++
+ const cwd = process.cwd();
++
+ run$2(input, flags, cwd).catch(err => {
+   if (err instanceof errors.InternalError) {
+     logger.error("The following error is an internal unexpected error, these should never happen.");
+diff --git a/node_modules/@changesets/cli/dist/cli.cjs.js b/node_modules/@changesets/cli/dist/cli.cjs.js
+index 47258e0..a37beff 100644
+--- a/node_modules/@changesets/cli/dist/cli.cjs.js
++++ b/node_modules/@changesets/cli/dist/cli.cjs.js
+@@ -1,7 +1,9 @@
+ 'use strict';
+ 
+-if (process.env.NODE_ENV === "production") {
+-  module.exports = require("./cli.cjs.prod.js");
+-} else {
+-  module.exports = require("./cli.cjs.dev.js");
+-}
++// if (process.env.NODE_ENV === "production") {
++//   module.exports = require("./cli.cjs.prod.js");
++// } else {
++//   module.exports = require("./cli.cjs.dev.js");
++// }
++
++module.exports = require("./cli.cjs.dev.js");
+\ No newline at end of file

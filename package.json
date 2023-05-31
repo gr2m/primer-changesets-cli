@@ -1,0 +1,19 @@
+{
+  "name": "primer-changesets-cli",
+  "version": "1.0.0",
+  "description": "The Primer flavored changesets CLI",
+  "bin": {
+    "changeset": "bin.js"
+  },
+  "scripts": {
+    "postinstall": "patch-package"
+  },
+  "author": "Gregor Martynus (https://github.com/gr2m)",
+  "license": "ISC",
+  "repository": "github:gr2m/primer-changesets-cli",
+  "dependencies": {
+    "@changesets/cli": "2.26.1",
+    "@primer/component-metadata": "^0.5.1",
+    "patch-package": "^7.0.0"
+  }
+}
