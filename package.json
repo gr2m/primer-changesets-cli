@@ -13,8 +13,10 @@
   "license": "ISC",
   "repository": "github:gr2m/primer-changesets-cli",
   "dependencies": {
+    "@primer/component-metadata": "^0.5.1"
+  },
+  "devDependencies": {
     "@changesets/cli": "2.26.1",
-    "@primer/component-metadata": "^0.5.1",
     "patch-package": "^7.0.0"
   },
   "release": {
