@@ -6,8 +6,8 @@
     "changeset": "bin.js"
   },
   "scripts": {
-    "postinstall": "patch-package",
     "prepublishOnly": "cp node_modules/@changesets/cli/dist/cli.cjs.dev.js bin.js && sed -i '1s/^/#!\\/usr\\/bin\\/env node\\n\\n/' bin.js",
+    "apply-patch": "patch-package @changesets/cli",
     "update-patch": "patch-package @changesets/cli"
   },
   "author": "Gregor Martynus (https://github.com/gr2m)",
@@ -46,11 +46,11 @@
     "semver": "^5.4.1",
     "spawndamnit": "^2.0.0",
     "term-size": "^2.1.0",
-    "tty-table": "^4.1.5",
-    "patch-package": "^7.0.0"
+    "tty-table": "^4.1.5"
   },
   "devDependencies": {
-    "@changesets/cli": "2.26.1"
+    "@changesets/cli": "2.26.1",
+    "patch-package": "^7.0.0"
   },
   "release": {
     "branches": [

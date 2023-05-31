@@ -27,6 +27,15 @@ npx changeset
 
 ## Updating the patch
 
+For the initial setup, run
+
+```
+npm install
+npm run apply-patch
+```
+
+Then
+
 1. Make your changes directly in `node_modules/@changesets/cli/dist/cli.cjs.dev.js`
 2. Run `npm run update-patch`
 
