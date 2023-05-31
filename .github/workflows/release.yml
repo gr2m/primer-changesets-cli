@@ -24,6 +24,7 @@ jobs:
           cache: npm
       # we need to install dependencies in order to run the patch
       - run: npm ci
+      - run: npm run apply-patch
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

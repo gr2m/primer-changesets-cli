@@ -7,7 +7,7 @@
   },
   "scripts": {
     "prepublishOnly": "cp node_modules/@changesets/cli/dist/cli.cjs.dev.js bin.js && sed -i '1s/^/#!\\/usr\\/bin\\/env node\\n\\n/' bin.js",
-    "apply-patch": "patch-package @changesets/cli",
+    "apply-patch": "patch-package",
     "update-patch": "patch-package @changesets/cli"
   },
   "author": "Gregor Martynus (https://github.com/gr2m)",
