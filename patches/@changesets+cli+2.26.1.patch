@@ -1,5 +1,5 @@
 diff --git a/node_modules/@changesets/cli/dist/cli.cjs.dev.js b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
-index 73ab02a..de35de4 100644
+index 73ab02a..1f1c090 100644
 --- a/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 +++ b/node_modules/@changesets/cli/dist/cli.cjs.dev.js
 @@ -101,7 +101,7 @@ function _objectSpread2(target) {
@@ -20,7 +20,7 @@ index 73ab02a..de35de4 100644
      await fs__default['default'].writeFile(path__default['default'].resolve(changesetBase, "config.json"), defaultConfig);
      logger.log(chalk__default['default']`Thanks for choosing {green changesets} to help manage your versioning and publishing\n`);
      logger.log("You should be set up to start using changesets now!\n");
-@@ -335,6 +335,62 @@ function formatPkgNameAndVersion(pkgName, version) {
+@@ -335,6 +335,75 @@ function formatPkgNameAndVersion(pkgName, version) {
  async function createChangeset(changedPackages, allPackages) {
    const releases = [];
  
@@ -45,6 +45,19 @@ index 73ab02a..de35de4 100644
 +  const primerPackages = ["_none_"];
 +
 +  if (pkg.name === "@primer/react") {
++    const { promisify } = require('node:util');
++    const exec = promisify(require('node:child_process').exec);
++
++    const command = `npm run --silent build:components.json`
++    logger.log(`Generating generated/components.json`)
++    logger.log(`$ ${command}`)
++    try {
++    const { stdout } = await exec(command);
++    logger.log(stdout);} catch (error) {
++      logger.error(error.message);
++      return
++    }
++    
 +    const componentsPath = path__default["default"].join(
 +      process.cwd(),
 +      "generated/components.json"
@@ -83,7 +96,7 @@ index 73ab02a..de35de4 100644
    if (allPackages.length > 1) {
      const packagesToRelease = await getPackagesToRelease(changedPackages, allPackages);
      let pkgJsonsByName = getPkgJsonsByName(allPackages);
-@@ -458,10 +514,21 @@ async function createChangeset(changedPackages, allPackages) {
+@@ -458,10 +527,21 @@ async function createChangeset(changedPackages, allPackages) {
      }
    }
  
@@ -106,7 +119,7 @@ index 73ab02a..de35de4 100644
    };
  }
  
-@@ -531,7 +598,8 @@ async function add(cwd, {
+@@ -531,7 +611,8 @@ async function add(cwd, {
      });
      const changedPackagesName = changedPackages.filter(pkg => isListablePackage(config, pkg.packageJson)).map(pkg => pkg.packageJson.name);
      newChangeset = await createChangeset(changedPackagesName, listablePackages);
@@ -116,7 +129,7 @@ index 73ab02a..de35de4 100644
  
      if (!newChangeset.confirmed) {
        newChangeset = _objectSpread2(_objectSpread2({}, newChangeset), {}, {
-@@ -542,6 +610,15 @@ async function add(cwd, {
+@@ -542,6 +623,15 @@ async function add(cwd, {
  
    if (newChangeset.confirmed) {
      const changesetID = await writeChangeset__default['default'](newChangeset, cwd);
@@ -132,7 +145,7 @@ index 73ab02a..de35de4 100644
      const [{
        getAddMessage
      }, commitOpts] = getCommitFunctions(config.commit, cwd);
-@@ -565,7 +642,7 @@ async function add(cwd, {
+@@ -565,7 +655,7 @@ async function add(cwd, {
        logger.log(chalk__default['default'].green("If you want to modify or expand on the changeset summary, you can find it here"));
      }
  
@@ -141,7 +154,7 @@ index 73ab02a..de35de4 100644
      logger.info(chalk__default['default'].blue(changesetPath));
  
      if (open) {
-@@ -1565,7 +1642,9 @@ const {
+@@ -1565,7 +1655,9 @@ const {
  
    }
  });
@@ -151,7 +164,7 @@ index 73ab02a..de35de4 100644
  run$2(input, flags, cwd).catch(err => {
    if (err instanceof errors.InternalError) {
      logger.error("The following error is an internal unexpected error, these should never happen.");
-@@ -1578,8 +1657,8 @@ ${util.format("", err).replace(process.cwd(), "<cwd>")}
+@@ -1578,8 +1670,8 @@ ${util.format("", err).replace(process.cwd(), "<cwd>")}
  
  ## Versions
  
